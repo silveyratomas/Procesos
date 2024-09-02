@@ -5,14 +5,14 @@ import tkinter as tk
 from queue import Queue
 
 class Proceso:
-    def _init_(self, id_proceso, memoria_solicitada, tiempo_ejecucion):
+    def __init__(self, id_proceso, memoria_solicitada, tiempo_ejecucion):
         self.id_proceso = id_proceso
         self.memoria_solicitada = memoria_solicitada
         self.tiempo_ejecucion = tiempo_ejecucion
         self.estado = "Listo"
 
 class Simulador:
-    def _init_(self, memoria_total, interfaz):
+    def __init__(self, memoria_total, interfaz):
         self.memoria_total = memoria_total
         self.memoria_disponible = memoria_total
         self.cola_listos = Queue()
@@ -69,7 +69,7 @@ class Simulador:
         self.interfaz.registrar_evento("Simulación finalizada.")
 
 class InterfazSimulador:
-    def _init_(self, memoria_total, simulador):
+    def __init__(self, memoria_total, simulador):
         self.simulador = simulador
         self.root = tk.Tk()
         self.root.title("Simulador de Gestión de Procesos y Memoria")
@@ -119,7 +119,6 @@ class InterfazSimulador:
     def iniciar(self):
         self.root.mainloop()
 
-
 def main():
     memoria_total = 100  # Memoria total del sistema en MB
     interfaz = InterfazSimulador(memoria_total, None)
@@ -145,5 +144,5 @@ def main():
     thread_ejecutar.join()
     thread_temporizar.join()
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()
