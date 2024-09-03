@@ -44,7 +44,7 @@ def agregar_proceso(memoria_necesaria):
         mover_a_swap(procesos_bloqueados[0])
 
     if MEMORIA_USADA + memoria_necesaria <= MEMORIA_TOTAL:
-        if random.random() <= 0.3:  # 30% de probabilidad de ir a bloqueado
+        if random.random() <= 0.45:  # 45% de probabilidad de ir a bloqueado
             procesos_bloqueados.append(proceso)
             proceso.estado = 'Bloqueado'
         else:
@@ -174,92 +174,108 @@ def actualizar_interfaz():
 # Configuración de la interfaz gráfica con Tkinter
 ventana = tk.Tk()
 ventana.title("Simulador de Gestión de Procesos y Memoria")
-ventana.geometry("600x500")
+ventana.geometry("800x600")
+ventana.config(bg="#f0f0f0")
 
 # Sección superior para mostrar el uso de memoria
-frame_memoria = tk.Frame(ventana, pady=10)
+frame_memoria = tk.Frame(ventana, pady=10, bg="#f0f0f0")
 frame_memoria.pack(fill=tk.X)
 
-memoria_label = tk.Label(frame_memoria, text=f"Memoria Usada: {MEMORIA_USADA}/{MEMORIA_TOTAL} MB", font=("Arial", 12))
+memoria_label = tk.Label(frame_memoria, text=f"Memoria Usada: {MEMORIA_USADA}/{MEMORIA_TOTAL} MB", font=("Arial", 14, "bold"), bg="#f0f0f0")
 memoria_label.pack()
 
 # Sección para agregar procesos manualmente y aleatoriamente
-frame_agregar = tk.Frame(ventana, pady=10, padx=10, bd=2, relief=tk.GROOVE)
+frame_agregar = tk.Frame(ventana, pady=10, padx=10, bd=2, relief=tk.RAISED, bg="#dcdcdc")
 frame_agregar.pack(fill=tk.X, pady=10)
 
-memoria_label_entry = tk.Label(frame_agregar, text="Memoria del Proceso (MB):", font=("Arial", 10))
+memoria_label_entry = tk.Label(frame_agregar, text="Memoria del Proceso (MB):", font=("Arial", 12), bg="#dcdcdc")
 memoria_label_entry.pack(side=tk.LEFT)
 
-memoria_entry = tk.Entry(frame_agregar, width=10, font=("Arial", 10))
+memoria_entry = tk.Entry(frame_agregar, width=10, font=("Arial", 12))
 memoria_entry.pack(side=tk.LEFT, padx=5)
 
-agregar_boton = tk.Button(frame_agregar, text="Agregar Proceso", command=agregar_proceso_manual, font=("Arial", 10))
+agregar_boton = tk.Button(frame_agregar, text="Agregar Proceso", command=agregar_proceso_manual, font=("Arial", 12), bg="#90ee90")
 agregar_boton.pack(side=tk.LEFT, padx=5)
 
 # Botón para agregar proceso aleatorio
-agregar_aleatorio_boton = tk.Button(frame_agregar, text="Agregar Proceso Aleatorio", command=agregar_proceso_aleatorio, font=("Arial", 10))
+agregar_aleatorio_boton = tk.Button(frame_agregar, text="Agregar Proceso Aleatorio", command=agregar_proceso_aleatorio, font=("Arial", 12), bg="#add8e6")
 agregar_aleatorio_boton.pack(side=tk.LEFT, padx=5)
 
 # Mensaje de error si se supera la memoria
-mensaje_error = tk.Label(frame_agregar, text="", font=("Arial", 10), fg="red")
-mensaje_error.pack(side=tk.LEFT)
+mensaje_error = tk.Label(frame_agregar, text="", font=("Arial", 12), fg="red", bg="#dcdcdc")
+mensaje_error.pack(side=tk.LEFT, padx=10)
 
-# Frame principal para mostrar los procesos
-frame_procesos = tk.Frame(ventana)
+# Sección para mostrar la lista de procesos en diferentes estados
+frame_procesos = tk.Frame(ventana, padx=10, pady=10, bg="#f0f0f0")
 frame_procesos.pack(fill=tk.BOTH, expand=True)
 
-# Procesos Listos
-frame_listos = tk.Frame(frame_procesos, bd=2, relief=tk.GROOVE)
-frame_listos.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5, pady=5)
+# Sección de procesos listos
+frame_listos = tk.Frame(frame_procesos, padx=10, pady=10, bd=2, relief=tk.SUNKEN, bg="#f0f0f0")
+frame_listos.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-listos_label = tk.Label(frame_listos, text="Procesos Listos", font=("Arial", 12))
-listos_label.pack(pady=5)
+listos_label = tk.Label(frame_listos, text="Procesos Listos", font=("Arial", 14, "bold"), bg="#f0f0f0")
+listos_label.pack()
 
-listos_listbox = tk.Listbox(frame_listos, font=("Arial", 10), height=8)
+listos_listbox = tk.Listbox(frame_listos, font=("Arial", 12), bg="#e0f7fa")
 listos_listbox.pack(fill=tk.BOTH, expand=True)
 
-# Proceso en Ejecución
-frame_ejecucion = tk.Frame(frame_procesos, bd=2, relief=tk.GROOVE)
-frame_ejecucion.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5, pady=5)
+# Sección de procesos bloqueados
+frame_bloqueados = tk.Frame(frame_procesos, padx=10, pady=10, bd=2, relief=tk.SUNKEN, bg="#f0f0f0")
+frame_bloqueados.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-ejecucion_label = tk.Label(frame_ejecucion, text="Proceso en Ejecución: Ninguno", font=("Arial", 12))
-ejecucion_label.pack(pady=5)
+bloqueados_label = tk.Label(frame_bloqueados, text="Procesos Bloqueados", font=("Arial", 14, "bold"), bg="#f0f0f0")
+bloqueados_label.pack()
 
-# Procesos Bloqueados
-frame_bloqueados = tk.Frame(frame_procesos, bd=2, relief=tk.GROOVE)
-frame_bloqueados.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5, pady=5)
-
-bloqueados_label = tk.Label(frame_bloqueados, text="Procesos Bloqueados", font=("Arial", 12))
-bloqueados_label.pack(pady=5)
-
-bloqueados_listbox = tk.Listbox(frame_bloqueados, font=("Arial", 10), height=8)
+bloqueados_listbox = tk.Listbox(frame_bloqueados, font=("Arial", 12), bg="#ffe0b2")
 bloqueados_listbox.pack(fill=tk.BOTH, expand=True)
 
-# Procesos en Swap
-frame_swap = tk.Frame(frame_procesos, bd=2, relief=tk.GROOVE)
-frame_swap.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5, pady=5)
+# Sección de procesos en swap
+frame_swap = tk.Frame(frame_procesos, padx=10, pady=10, bd=2, relief=tk.SUNKEN, bg="#f0f0f0")
+frame_swap.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-swap_label = tk.Label(frame_swap, text="Procesos en Swap", font=("Arial", 12))
-swap_label.pack(pady=5)
+swap_label = tk.Label(frame_swap, text="Procesos en Swap", font=("Arial", 14, "bold"), bg="#f0f0f0")
+swap_label.pack()
 
-swap_listbox = tk.Listbox(frame_swap, font=("Arial", 10), height=8)
+swap_listbox = tk.Listbox(frame_swap, font=("Arial", 12), bg="#f8bbd0")
 swap_listbox.pack(fill=tk.BOTH, expand=True)
 
-# Procesos Terminados
-frame_terminados = tk.Frame(frame_procesos, bd=2, relief=tk.GROOVE)
-frame_terminados.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5, pady=5)
+# Sección de procesos terminados
+frame_terminados = tk.Frame(frame_procesos, padx=10, pady=10, bd=2, relief=tk.SUNKEN, bg="#f0f0f0")
+frame_terminados.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-terminados_label = tk.Label(frame_terminados, text="Procesos Terminados", font=("Arial", 12))
-terminados_label.pack(pady=5)
+terminados_label = tk.Label(frame_terminados, text="Procesos Terminados", font=("Arial", 14, "bold"), bg="#f0f0f0")
+terminados_label.pack()
 
-terminados_listbox = tk.Listbox(frame_terminados, font=("Arial", 10), height=8)
+terminados_listbox = tk.Listbox(frame_terminados, font=("Arial", 12), bg="#c8e6c9")
 terminados_listbox.pack(fill=tk.BOTH, expand=True)
 
-# Inicia hilos para simular la creación y ejecución de procesos
-threading.Thread(target=crear_procesos_automaticos, daemon=True).start()
-threading.Thread(target=ejecutar_procesos, daemon=True).start()
-threading.Thread(target=revisar_swap, daemon=True).start()
-threading.Thread(target=mover_bloqueados_a_listos, daemon=True).start()
+# Sección para mostrar el proceso en ejecución
+frame_ejecucion = tk.Frame(ventana, pady=10, bg="#f0f0f0")
+frame_ejecucion.pack(fill=tk.X)
 
-# Inicia el bucle principal de la interfaz gráfica
+ejecucion_label = tk.Label(frame_ejecucion, text="Proceso en Ejecución: Ninguno", font=("Arial", 14, "bold"), bg="#f0f0f0")
+ejecucion_label.pack()
+
+# Función para finalizar la simulación
+def finalizar_simulacion():
+    ventana.quit()
+
+# Botón para finalizar la simulación
+finalizar_boton = tk.Button(ventana, text="Finalizar Simulación", command=finalizar_simulacion, font=("Arial", 14), bg="#ff6f61")
+finalizar_boton.pack(side=tk.BOTTOM, pady=10)
+
+# Inicialización de hilos
+hilo_ejecucion = threading.Thread(target=ejecutar_procesos)
+hilo_ejecucion.start()
+
+hilo_bloqueados = threading.Thread(target=mover_bloqueados_a_listos)
+hilo_bloqueados.start()
+
+hilo_swap = threading.Thread(target=revisar_swap)
+hilo_swap.start()
+
+# Hilo para crear procesos aleatorios
+hilo_procesos_aleatorios = threading.Thread(target=crear_procesos_automaticos)
+hilo_procesos_aleatorios.start()
+
 ventana.mainloop()
