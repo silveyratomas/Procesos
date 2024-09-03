@@ -29,10 +29,10 @@ class Proceso:
 # Función para crear procesos aleatorios
 def crear_procesos_automaticos():
     while True:
-        if len(procesos) < 10:  # Máximo 10 procesos simultáneos
+        if len(procesos) < 30:  # Máximo 10 procesos simultáneos
             memoria_necesaria = random.randint(50, 200)
             agregar_proceso(memoria_necesaria)
-        time.sleep(2)
+        time.sleep(1)
 
 # Función para agregar un proceso (manual o aleatorio)
 def agregar_proceso(memoria_necesaria):
@@ -143,8 +143,10 @@ def agregar_proceso_manual():
             agregar_proceso(memoria_necesaria)
         else:
             tk.messagebox.showerror("Error", "La memoria debe ser un número positivo.")
+            time.sleep(3)
     except ValueError:
         tk.messagebox.showerror("Error", "Ingrese un valor numérico válido para la memoria.")
+        time.sleep(3)
     finally:
         memoria_entry.delete(0, tk.END)  # Limpiar el campo de entrada
 
