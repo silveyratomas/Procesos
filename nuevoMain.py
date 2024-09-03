@@ -3,7 +3,7 @@ import random
 import threading
 import time
 
-# Configuración de la memoria
+# Configuración de la memoriaa
 MEMORIA_TOTAL = 1000  # Memoria total disponible (en MB)
 MEMORIA_USADA = 0  # Memoria actualmente en uso (en MB)
 
