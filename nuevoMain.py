@@ -3,9 +3,10 @@ import random
 import threading
 import time
 
-# Configuración de la memoriaa
+# Configuración de la memoria
 MEMORIA_TOTAL = 1000  # Memoria total disponible (en MB)
 MEMORIA_USADA = 0  # Memoria actualmente en uso (en MB)
+MAX_SWAP = 5  # Máximo número de procesos en swap
 
 # Lista de procesos en diferentes estados
 procesos = []
@@ -43,11 +44,30 @@ def agregar_proceso(memoria_necesaria):
         MEMORIA_USADA += memoria_necesaria
         proceso.estado = 'Listo'
     else:
-        proceso.estado = 'Swap'
-        procesos_swap.append(proceso)
+        proceso.estado = 'Bloqueado'
+        procesos_bloqueados.append(proceso)
+        threading.Thread(target=procesar_bloqueado, args=(proceso,), daemon=True).start()
 
     procesos.append(proceso)
     actualizar_interfaz()
+
+# Función para procesar los procesos bloqueados
+def procesar_bloqueado(proceso):
+    time.sleep(3)  # Espera de 3 segundos antes de intentar pasar al swap
+    mover_a_swap(proceso)
+
+# Función para mover procesos a swap
+def mover_a_swap(proceso):
+    global MEMORIA_USADA
+    if len(procesos_swap) < MAX_SWAP:
+        procesos_bloqueados.remove(proceso)
+        procesos_swap.append(proceso)
+        proceso.estado = 'Swap'
+        actualizar_interfaz()
+    else:
+        # Se queda en bloqueados si no hay espacio en swap
+        proceso.estado = 'Bloqueado'
+        actualizar_interfaz()
 
 # Función para revisar procesos en Swap y moverlos a Listos si hay suficiente memoria
 def revisar_swap():
@@ -184,13 +204,10 @@ terminados_label.pack(pady=5)
 terminados_listbox = tk.Listbox(frame_terminados, font=("Arial", 10), height=8)
 terminados_listbox.pack(fill=tk.BOTH, expand=True)
 
-# Hilos para la simulación de creación, ejecución de procesos y revisión de Swap
-creador_procesos_thread = threading.Thread(target=crear_procesos, daemon=True)
-ejecutor_procesos_thread = threading.Thread(target=ejecutar_procesos, daemon=True)
-revisor_swap_thread = threading.Thread(target=revisar_swap, daemon=True)
+# Hilos para la simulación
+threading.Thread(target=crear_procesos, daemon=True).start()
+threading.Thread(target=ejecutar_procesos, daemon=True).start()
+threading.Thread(target=revisar_swap, daemon=True).start()
 
-creador_procesos_thread.start()
-ejecutor_procesos_thread.start()
-revisor_swap_thread.start()
-
+# Iniciar la interfaz gráfica
 ventana.mainloop()
