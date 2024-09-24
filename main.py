@@ -381,4 +381,5 @@ hilo_swap.start()
 hilo_procesos_aleatorios = threading.Thread(target=crear_procesos_automaticos)
 hilo_procesos_aleatorios.start()
 
+#hilo principal que se encarga de actualizar la interfaz siendo este el responsable de la exclusion mutua
 ventana.mainloop()
